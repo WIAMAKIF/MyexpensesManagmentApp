@@ -10,12 +10,12 @@ A simple application to manage personal expenses efficiently.
 - User authentication (Sign Up, Sign In)
 
 ## Technologies Used
-- Android Development
+- Android Studio
 - Java
-- Firebase (for data storage)
-- SQLite (for local database)
+- Firebase (for data storage and authentication)
+
 
 ## Setup Instructions
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/ExpenseManagerApp.git
+   git clone https://github.com/WIAMAKIF/MyexpensesManagmentApp.git
