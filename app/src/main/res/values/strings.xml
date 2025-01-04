@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">My ApplicationManageExpenses</string>
+    <string name="total_expense_0">Total Expense: $0</string>
+</resources>
