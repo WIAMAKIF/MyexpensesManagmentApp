@@ -77,10 +77,14 @@ public class CategoryManagementActivity extends AppCompatActivity {
                         categoryList.clear();
                         for (DocumentSnapshot document : task.getResult()) {
                             Category category = document.toObject(Category.class);
-                            categoryList.add(category);
+                            if (category != null) {
+                                category.setId(document.getId()); // Set the document ID
+                                categoryList.add(category);
+                            }
                         }
                         categoryAdapter.notifyDataSetChanged();
                     }
                 });
     }
+
 }

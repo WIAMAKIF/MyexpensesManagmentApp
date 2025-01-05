@@ -4,6 +4,7 @@ package com.example.myapplicationmanageexpenses;
 public class Category {
     private String name;
     private String description;
+    private  String id;
 
     // Default constructor
     public Category() {
@@ -30,6 +31,14 @@ public class Category {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id=id;
     }
 }
 
