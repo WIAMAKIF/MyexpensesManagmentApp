@@ -52,19 +52,21 @@ public class ExpenseActivity extends AppCompatActivity {
 
     private void fetchExpenses() {
         db.collection("Expenses")
-                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .orderBy("date", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         expenseList.clear();
                         double total = 0;
                         for (DocumentSnapshot document : task.getResult()) {
+                            String id = document.getId(); // Get the document ID
                             String description = document.getString("description");
                             double amount = document.getDouble("amount");
                             String category = document.getString("category");
                             String date = document.getString("date");
 
-                            expenseList.add(new Expense(description, amount, category, date));
+                            Expense expense = new Expense(id, description, amount, category, date); // Pass the ID
+                            expenseList.add(expense);
                             total += amount;
                         }
                         expenseAdapter.notifyDataSetChanged();
@@ -74,4 +76,5 @@ public class ExpenseActivity extends AppCompatActivity {
                     }
                 });
     }
+
 }
