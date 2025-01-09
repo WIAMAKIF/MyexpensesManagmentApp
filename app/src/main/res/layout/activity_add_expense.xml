@@ -44,16 +44,14 @@
             android:padding="12dp"
             android:background="@drawable/rounded_edittext" />
 
-        <!-- Category -->
-        <EditText
-            android:id="@+id/category"
+        <!-- Category Spinner -->
+        <Spinner
+            android:id="@+id/categorySpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:hint="Category"
-            android:inputType="text"
-            android:padding="12dp"
-            android:background="@drawable/rounded_edittext" />
+            android:background="@drawable/rounded_edittext"
+            android:padding="12dp" />
 
         <!-- Date -->
         <EditText
