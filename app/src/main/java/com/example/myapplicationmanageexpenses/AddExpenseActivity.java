@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AddExpenseActivity extends AppCompatActivity {
@@ -62,14 +63,23 @@ public class AddExpenseActivity extends AppCompatActivity {
                         db.collection("Expenses")
                                 .add(expense)
                                 .addOnSuccessListener(documentReference -> {
-                                    mDialog.dismiss();
-                                    Toast.makeText(getApplicationContext(), "Expense added!", Toast.LENGTH_LONG).show();
-                                    clearFields();
+                                    db.collection("Summary").document("TotalExpenses")
+                                            .update("totalExpenses", FieldValue.increment(amountValue))
+                                            .addOnSuccessListener(aVoid -> {
+                                                mDialog.dismiss();
+                                                Toast.makeText(getApplicationContext(), "Expense added and total updated!", Toast.LENGTH_LONG).show();
+                                                clearFields();
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                mDialog.dismiss();
+                                                Toast.makeText(getApplicationContext(), "Error updating total expenses", Toast.LENGTH_LONG).show();
+                                            });
                                 })
                                 .addOnFailureListener(e -> {
                                     mDialog.dismiss();
                                     Toast.makeText(getApplicationContext(), "Error adding expense", Toast.LENGTH_LONG).show();
                                 });
+
                     } catch (NumberFormatException e) {
                         mDialog.dismiss();
                         Toast.makeText(getApplicationContext(), "Invalid amount format", Toast.LENGTH_LONG).show();

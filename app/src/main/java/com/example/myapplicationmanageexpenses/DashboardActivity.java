@@ -33,8 +33,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         recentExpensesList = new ArrayList<>();
 
-        // Example values (this could be dynamically fetched from Firestore)
-        totalExpensesText.setText("Total Expenses: $500");
+
 
         fetchRecentExpenses();
 
@@ -56,7 +55,7 @@ public class DashboardActivity extends AppCompatActivity {
             startActivity(new Intent(DashboardActivity.this, CategoryManagementActivity.class));
         });
 
-
+        fetchTotalExpensesFromSummary();
 
         logoutButton.setOnClickListener(v -> {
             finish(); // Close the app or redirect to login screen
@@ -65,7 +64,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void fetchRecentExpenses() {
         db.collection("Expenses")
-                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .orderBy("date", Query.Direction.DESCENDING)
                 .limit(5)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -96,4 +95,24 @@ public class DashboardActivity extends AppCompatActivity {
         }
         recentExpensesText.setText(recentExpensesTextBuilder.toString());
     }
+
+    private void fetchTotalExpensesFromSummary() {
+        db.collection("Summary").document("TotalExpenses")
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Double totalExpenses = documentSnapshot.getDouble("totalExpenses");
+                        if (totalExpenses != null) {
+                            totalExpensesText.setText("Total Expenses: $" + totalExpenses);
+                        } else {
+                            totalExpensesText.setText("Total Expenses: $0");
+                        }
+                    } else {
+                        totalExpensesText.setText("No data found");
+                    }
+                })
+                .addOnFailureListener(e -> totalExpensesText.setText("Error loading total expenses"));
+    }
+
+
 }

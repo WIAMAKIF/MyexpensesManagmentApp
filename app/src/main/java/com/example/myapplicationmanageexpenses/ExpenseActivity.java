@@ -44,6 +44,8 @@ public class ExpenseActivity extends AppCompatActivity {
         expenseRecyclerView.setAdapter(expenseAdapter);
 
         fetchExpenses();
+        
+        fetchTotalFromSummary();
 
         addExpenseButton.setOnClickListener(view -> {
             startActivity(new Intent(ExpenseActivity.this, AddExpenseActivity.class));
@@ -57,7 +59,6 @@ public class ExpenseActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         expenseList.clear();
-                        double total = 0;
                         for (DocumentSnapshot document : task.getResult()) {
                             String id = document.getId(); // Get the document ID
                             String description = document.getString("description");
@@ -67,14 +68,30 @@ public class ExpenseActivity extends AppCompatActivity {
 
                             Expense expense = new Expense(id, description, amount, category, date); // Pass the ID
                             expenseList.add(expense);
-                            total += amount;
                         }
                         expenseAdapter.notifyDataSetChanged();
-                        totalExpenseTextView.setText("Total Expense: $" + total);
                     } else {
                         totalExpenseTextView.setText("Error fetching expenses");
                     }
                 });
     }
+
+
+    private void fetchTotalFromSummary() {
+        db.collection("Summary").document("TotalExpenses")
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Double total = documentSnapshot.getDouble("totalExpenses");
+                        if (total != null) {
+                            totalExpenseTextView.setText("Total Expense: $" + total);
+                        } else {
+                            totalExpenseTextView.setText("Total Expense: $0");
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> totalExpenseTextView.setText("Error fetching total expense"));
+    }
+
 
 }
